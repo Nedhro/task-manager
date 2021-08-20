@@ -35,12 +35,8 @@ public class RoleServiceImpl implements RoleService {
     Role role;
     role = modelMapper.map(roleDto, Role.class);
     role = roleRepository.save(role);
-    if (role != null) {
-      return ResponseBuilder.getSuccessResponse(
-          HttpStatus.CREATED, root + "Has been Created", null);
-    }
-    return ResponseBuilder.getFailureResponse(
-        HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error");
+    return ResponseBuilder.getSuccessResponse(
+        HttpStatus.CREATED, root + "Has been Created", role);
   }
 
   @Override
@@ -50,25 +46,21 @@ public class RoleServiceImpl implements RoleService {
       return ResponseBuilder.getFailureResponse(
           HttpStatus.IM_USED, "This" + root + "Already Created");
     }
-    Role role = roleRepository.getByIdAndActiveStatusTrue(id, ActiveStatus.ACTIVE.getValue());
+    Role role = roleRepository.findByIdAndActiveStatusTrue(id);
     if (role != null) {
       modelMapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
       role = modelMapper.map(roleDto, Role.class);
       role = roleRepository.save(role);
-      if (role != null) {
-        return ResponseBuilder.getSuccessResponse(
-            HttpStatus.OK, root + " updated Successfully", null);
-      }
+      return ResponseBuilder.getSuccessResponse(
+          HttpStatus.OK, root + " updated Successfully", role);
 
-      return ResponseBuilder.getFailureResponse(
-          HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error Occurs");
     }
     return ResponseBuilder.getFailureResponse(HttpStatus.NOT_FOUND, root + " not found");
   }
 
   @Override
   public Response getById(Long id) {
-    Role role = roleRepository.getByIdAndActiveStatusTrue(id, ActiveStatus.ACTIVE.getValue());
+    Role role = roleRepository.findByIdAndActiveStatusTrue(id);
     if (role != null) {
       modelMapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
       RoleDto roleDto = modelMapper.map(role, RoleDto.class);
@@ -80,16 +72,12 @@ public class RoleServiceImpl implements RoleService {
 
   @Override
   public Response del(Long id) {
-    Role role = roleRepository.getByIdAndActiveStatusTrue(id, ActiveStatus.ACTIVE.getValue());
+    Role role = roleRepository.findByIdAndActiveStatusTrue(id);
     if (role != null) {
       role.setActiveStatus(ActiveStatus.DELETE.getValue());
       role = roleRepository.save(role);
-      if (role != null) {
-        return ResponseBuilder.getSuccessResponse(
-            HttpStatus.OK, root + "Delete SuccessFully", null);
-      }
-      return ResponseBuilder.getFailureResponse(
-          HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error");
+      return ResponseBuilder.getSuccessResponse(
+          HttpStatus.OK, root + "Delete SuccessFully", role);
     }
     return ResponseBuilder.getFailureResponse(HttpStatus.NOT_FOUND, root + " not found");
   }
@@ -98,7 +86,7 @@ public class RoleServiceImpl implements RoleService {
   public Response getAll() {
     List<Role> roleList = roleRepository.list(ActiveStatus.ACTIVE.getValue());
     List<RoleDto> roleDtoList = this.getRoles(roleList);
-    if (roleDtoList.isEmpty() || roleDtoList == null) {
+    if (roleDtoList.isEmpty()) {
       return ResponseBuilder.getSuccessResponse(HttpStatus.OK, "There is no role", null);
     }
     return ResponseBuilder.getSuccessResponse(
@@ -117,7 +105,6 @@ public class RoleServiceImpl implements RoleService {
   }
 
   private Role getRoleByName(RoleDto roleDto) {
-    Role role = roleRepository.findByName(roleDto.getName());
-    return role;
+    return roleRepository.findByName(roleDto.getName());
   }
 }

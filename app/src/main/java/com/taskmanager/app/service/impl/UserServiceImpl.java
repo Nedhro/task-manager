@@ -33,12 +33,8 @@ public class UserServiceImpl implements UserService {
     userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
     user = modelMapper.map(userDto, User.class);
     user = userRepository.save(user);
-    if (user != null) {
-      return ResponseBuilder.getSuccessResponse(
-          HttpStatus.CREATED, root + "Has been Created", null);
-    }
-    return ResponseBuilder.getFailureResponse(
-        HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error");
+    return ResponseBuilder.getSuccessResponse(
+        HttpStatus.CREATED, root + "Has been Created", user);
   }
 
   @Override
@@ -48,17 +44,17 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public User getById(Long id) {
-    return userRepository.getByIdAndActiveStatusTrue(ActiveStatus.ACTIVE.getValue(), id);
+    return userRepository.findByIdAndActiveStatusTrue(id);
   }
 
   @Override
   public User getByName(String name) {
-    return userRepository.getByUserNameAndActiveStatusTrue(ActiveStatus.ACTIVE.getValue(), name);
+    return userRepository.findByUserNameAndActiveStatusTrue(name);
   }
 
   @Override
   public String delete(Long id) {
-    User user = userRepository.getByIdAndActiveStatusTrue(ActiveStatus.ACTIVE.getValue(), id);
+    User user = userRepository.findByIdAndActiveStatusTrue(id);
     user.setActiveStatus(ActiveStatus.DELETE.getValue());
     return null;
   }

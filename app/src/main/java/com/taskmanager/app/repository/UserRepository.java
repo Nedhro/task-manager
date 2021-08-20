@@ -13,11 +13,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
   @Query("from User where activeStatus =(:activeStatus)")
   List<User> list(@Param("activeStatus") Integer activeStatus);
 
-  @Query("from User where activeStatus = (:activeStatus) and id =(:id)")
-  User getByIdAndActiveStatusTrue(
-      @Param("activeStatus") Integer activeStatus, @Param("id") Long id);
+  User findByIdAndActiveStatusTrue(Long id);
 
-  @Query("from User where activeStatus = (:activeStatus) and userName =(:userName)")
-  User getByUserNameAndActiveStatusTrue(
-      @Param("activeStatus") Integer activeStatus, @Param("userName") String userName);
+  User findByUserNameAndActiveStatusTrue(String userName);
 }

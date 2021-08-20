@@ -16,7 +16,5 @@ public interface RoleRepository extends JpaRepository<Role, Long> {
   @Query("from Role where activeStatus = (:activeStatus)")
   List<Role> list(@Param("activeStatus") Integer activeStatus);
 
-  @Query("from Role where id = :roleId and activeStatus = :activeStatus")
-  Role getByIdAndActiveStatusTrue(
-      @Param("roleId") Long roleId, @Param("activeStatus") Integer activeStatus);
+  Role findByIdAndActiveStatusTrue(Long roleId);
 }
