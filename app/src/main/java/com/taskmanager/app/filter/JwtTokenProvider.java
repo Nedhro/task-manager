@@ -54,8 +54,7 @@ public class JwtTokenProvider {
   public Boolean isValidateToken(String token, HttpServletRequest request) {
     try {
       Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
-        return !request.getRemoteAddr().isEmpty() && request.getRemoteAddr()
-            .equals(extractIP(token));
+      return !request.getRemoteAddr().isEmpty() && request.getRemoteAddr().equals(extractIP(token));
     } catch (Exception e) {
       return false;
     }

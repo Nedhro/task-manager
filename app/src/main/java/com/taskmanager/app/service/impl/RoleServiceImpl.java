@@ -35,8 +35,7 @@ public class RoleServiceImpl implements RoleService {
     Role role;
     role = modelMapper.map(roleDto, Role.class);
     role = roleRepository.save(role);
-    return ResponseBuilder.getSuccessResponse(
-        HttpStatus.CREATED, root + "Has been Created", role);
+    return ResponseBuilder.getSuccessResponse(HttpStatus.CREATED, root + "Has been Created", role);
   }
 
   @Override
@@ -53,7 +52,6 @@ public class RoleServiceImpl implements RoleService {
       role = roleRepository.save(role);
       return ResponseBuilder.getSuccessResponse(
           HttpStatus.OK, root + " updated Successfully", role);
-
     }
     return ResponseBuilder.getFailureResponse(HttpStatus.NOT_FOUND, root + " not found");
   }
@@ -76,8 +74,7 @@ public class RoleServiceImpl implements RoleService {
     if (role != null) {
       role.setActiveStatus(ActiveStatus.DELETE.getValue());
       role = roleRepository.save(role);
-      return ResponseBuilder.getSuccessResponse(
-          HttpStatus.OK, root + "Delete SuccessFully", role);
+      return ResponseBuilder.getSuccessResponse(HttpStatus.OK, root + "Delete SuccessFully", role);
     }
     return ResponseBuilder.getFailureResponse(HttpStatus.NOT_FOUND, root + " not found");
   }

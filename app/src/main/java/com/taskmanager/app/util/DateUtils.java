@@ -10,6 +10,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 public final class DateUtils {
@@ -71,9 +72,9 @@ public final class DateUtils {
     Date currentDate = getDatefromString(getStringDate(new Date(), "dd/MM/yyyy"), "dd/MM/yyyy");
     Map<String, Integer> firstDateMonthYear = getMonthYear(firstDateOfMonthYear, 0);
     Map<String, Integer> currentDateMonthYear = getMonthYear(currentDate, 0);
-      return firstDateOfMonthYear.after(currentDate)
-          && (!firstDateMonthYear.get("month").equals(currentDateMonthYear.get("month"))
-          || !firstDateMonthYear.get("year").equals(currentDateMonthYear.get("year")));
+    return firstDateOfMonthYear.after(Objects.requireNonNull(currentDate))
+        && (!firstDateMonthYear.get("month").equals(currentDateMonthYear.get("month"))
+        || !firstDateMonthYear.get("year").equals(currentDateMonthYear.get("year")));
   }
 
   public static String getShortMonthNameFromNumericValue(String fullMonthName)
@@ -104,7 +105,7 @@ public final class DateUtils {
     cal.add(Calendar.MONTH, addMonthNum);
     int month = cal.get(Calendar.MONTH) + 1;
     int year = cal.get(Calendar.YEAR);
-    Map<String, Integer> resultMap = new HashMap<String, Integer>();
+    Map<String, Integer> resultMap = new HashMap<>();
     resultMap.put("month", month);
     resultMap.put("year", year);
     return resultMap;
@@ -166,7 +167,7 @@ public final class DateUtils {
   }
 
   public static Integer getNumaricValueOfMonth(String monthName) throws InvalidMonthException {
-    Date date = null;
+    Date date;
     try {
       date = new SimpleDateFormat("MMMM").parse(monthName);
     } catch (ParseException e) {
@@ -187,7 +188,7 @@ public final class DateUtils {
 
   public static Date getExpirationTime(Long expireHours) {
     Date now = new Date();
-    Long expireInMilis = TimeUnit.HOURS.toMillis(expireHours);
+    long expireInMilis = TimeUnit.HOURS.toMillis(expireHours);
     return new Date(expireInMilis + now.getTime());
   }
 }

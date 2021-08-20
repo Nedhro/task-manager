@@ -33,8 +33,7 @@ public class UserServiceImpl implements UserService {
     userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
     user = modelMapper.map(userDto, User.class);
     user = userRepository.save(user);
-    return ResponseBuilder.getSuccessResponse(
-        HttpStatus.CREATED, root + "Has been Created", user);
+    return ResponseBuilder.getSuccessResponse(HttpStatus.CREATED, root + "Has been Created", user);
   }
 
   @Override
