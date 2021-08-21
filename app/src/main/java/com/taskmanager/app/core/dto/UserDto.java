@@ -1,15 +1,19 @@
 package com.taskmanager.app.core.dto;
 
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
-@EqualsAndHashCode(callSuper = true)
 @Data
-public class UserDto extends BaseDto {
+public class UserDto {
 
-  private String userName;
-  private String email;
-  private String password;
-  private List<RoleDto> roles;
+  private Long id;
+
+  private String username;
+
+  private String name;
+
+  private Boolean enabled;
+
+  private Set<String> roles = new HashSet<>();
 }

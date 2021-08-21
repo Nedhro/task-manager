@@ -1,13 +1,19 @@
 package com.taskmanager.app.core.dto;
 
-import javax.validation.constraints.NotEmpty;
+import java.util.HashSet;
+import java.util.Set;
+import javax.validation.constraints.NotNull;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
-@EqualsAndHashCode(callSuper = true)
 @Data
-public class RoleDto extends BaseDto {
+public class RoleDto {
 
-  @NotEmpty(message = "Name is mandatory")
+  private Long id;
+
+  @NotNull
   private String name;
+
+  private String title;
+
+  private Set<String> permissions = new HashSet<>();
 }

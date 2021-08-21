@@ -1,50 +1,120 @@
 package com.taskmanager.app.controller;
 
-import com.taskmanager.app.core.dto.Response;
 import com.taskmanager.app.core.dto.RoleDto;
-import com.taskmanager.app.service.RoleService;
-import com.taskmanager.app.util.UrlConstraint;
-import org.springframework.web.bind.annotation.DeleteMapping;
+import com.taskmanager.app.core.model.AuthUser;
+import com.taskmanager.app.core.model.Permission;
+import com.taskmanager.app.core.model.Role;
+import com.taskmanager.app.filter.RoleDtoBuilder;
+import com.taskmanager.app.repository.PermissionRepository;
+import com.taskmanager.app.repository.RoleRepository;
+import com.taskmanager.app.util.CustomUtil;
+import com.taskmanager.app.util.RoleGroup;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(UrlConstraint.RoleManagement.ROOT)
 public class RoleController {
 
-    private final RoleService roleService;
+  private static Set<String> features = new HashSet<>();
 
-    public RoleController(RoleService roleService) {
-        this.roleService = roleService;
+  static {
+    features.add("ROLE_READ");
+    features.add("ROLE_WRITE");
+    features.add("ROLE_ASSIGN");
+    CustomUtil.permissions.put(RoleGroup.ROLE.name(), features);
+  }
+
+  private final RoleRepository roleRepository;
+  private final PermissionRepository permissionRepository;
+
+  public RoleController(RoleRepository roleRepository, PermissionRepository permissionRepository) {
+    this.roleRepository = roleRepository;
+    this.permissionRepository = permissionRepository;
+  }
+
+  @GetMapping("/admin/roles")
+  @PreAuthorize("hasPermission(null, 'ROLE', 'READ')")
+  public ResponseEntity<?> roles(Authentication auth) {
+    AuthUser authenticatedUser = (AuthUser) auth.getPrincipal();
+    if (authenticatedUser == null) {
+      return new ResponseEntity<HttpStatus>(HttpStatus.UNAUTHORIZED);
+    }
+    Set<RoleDto> roles = new HashSet<>();
+    for (Role role : roleRepository.findAll()) {
+      roles.add(new RoleDtoBuilder().withRole(role).buildOnlyRole());
+    }
+    return ResponseEntity.ok(roles);
+  }
+
+  @GetMapping("/admin/role/{id}")
+  @PreAuthorize("hasPermission(null, 'ROLE', 'READ')")
+  public ResponseEntity<?> getRoleById(@PathVariable(value = "id") Long id, Authentication auth) {
+    AuthUser authenticatedUser = (AuthUser) auth.getPrincipal();
+    if (authenticatedUser == null) {
+      return new ResponseEntity<HttpStatus>(HttpStatus.UNAUTHORIZED);
     }
 
-    @PostMapping
-    public Response saveRole(@RequestBody RoleDto roleDto) {
-        return roleService.save(roleDto);
-    }
+    Optional<Role> role = roleRepository.findById(id);
+    return role.map(value -> ResponseEntity.ok(new RoleDtoBuilder().withRole(value).build()))
+        .orElse(null);
+  }
 
-    @GetMapping
-    public Response getAll() {
-        return roleService.getAll();
+  @PostMapping("/admin/role")
+  @PreAuthorize("hasPermission(null, 'ROLE', 'WRITE')")
+  public ResponseEntity<?> saveRole(@RequestBody RoleDto roleDto, Authentication auth) {
+    AuthUser authenticatedUser = (AuthUser) auth.getPrincipal();
+    if (authenticatedUser == null) {
+      return new ResponseEntity<HttpStatus>(HttpStatus.UNAUTHORIZED);
     }
+    Role role = roleRepository.findByName(roleDto.getName());
+    if (role != null)
+      return new ResponseEntity<>("Error! Role already Exist with this name", HttpStatus.FOUND);
 
-    @GetMapping(value = UrlConstraint.RoleManagement.GET)
-    public Response getById(@PathVariable("roleId") Long roleId) {
-        return roleService.getById(roleId);
-    }
+    role = new Role();
+    role.setName(roleDto.getName());
+    role.setTitle(roleDto.getTitle());
 
-    @DeleteMapping(value = UrlConstraint.RoleManagement.DELETE)
-    public Response delRole(@PathVariable("roleId") Long roleId) {
-        return roleService.del(roleId);
-    }
+    roleRepository.save(role);
+    return ResponseEntity.ok(role);
+  }
 
-    @PutMapping(value = UrlConstraint.RoleManagement.PUT)
-    public Response updateRole(@RequestBody RoleDto roleDto, @PathVariable("roleId") Long roleId) {
-        return roleService.update(roleId, roleDto);
+  @PostMapping("/admin/role/{id}")
+  @PreAuthorize("hasPermission(null, 'ROLE', 'ASSIGN')")
+  public ResponseEntity<?> saveRolePermission(
+      @PathVariable(value = "id") Long id,
+      @RequestBody Set<String> permissions,
+      Authentication auth) {
+    AuthUser authenticatedUser = (AuthUser) auth.getPrincipal();
+    if (authenticatedUser == null) {
+      return new ResponseEntity<HttpStatus>(HttpStatus.UNAUTHORIZED);
     }
+    Optional<Role> role = roleRepository.findById(id);
+    if (role.isEmpty())
+      return new ResponseEntity<HttpStatus>(HttpStatus.NOT_FOUND);
+    if (!permissions.isEmpty()) {
+      role.get().setPermissions(getPermissions(permissions));
+    }
+    roleRepository.save(role.get());
+    return ResponseEntity.ok(role);
+  }
+
+  private Set<Permission> getPermissions(Set<String> permissions) {
+    Set<Permission> PermissionsList = new HashSet<>();
+    for (String str : permissions) {
+      Permission permission = permissionRepository.findByName(str);
+      if (permission != null)
+        PermissionsList.add(permission);
+    }
+    return PermissionsList;
+  }
 }

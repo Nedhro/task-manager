@@ -1,56 +1,71 @@
 package com.taskmanager.app.core.model;
 
-import com.taskmanager.app.core.enums.ActiveStatus;
+import com.taskmanager.app.core.enums.Status;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.core.context.SecurityContextHolder;
 
-@Data
+@Getter
+@Setter
 @MappedSuperclass
-public class BaseEntity implements Serializable {
+public abstract class BaseEntity<ID> implements Serializable {
+
   private static final long serialVersionUID = 1L;
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
-
-  @Column(updatable = false)
-  private String createdBy;
-
-  @Column(updatable = false)
+  @CreationTimestamp
+  @Column(name = "created_date", nullable = false)
   @Temporal(TemporalType.TIMESTAMP)
-  private Date createdAt;
+  @DateTimeFormat(pattern = "yyyy-MM-dd")
+  private Date createdDate;
 
-  private String updatedBy;
-
+  @CreationTimestamp
+  @Column(name = "last_modified_date", nullable = false)
   @Temporal(TemporalType.TIMESTAMP)
-  private Date updateAt;
+  @DateTimeFormat(pattern = "yyyy-MM-dd")
+  private Date lastModifiedDate;
 
-  private Integer activeStatus;
+  @Column(name = "modified_by")
+  private Long modified_by;
+
+  private Status status = Status.DRAFT;
+
+  public abstract ID getId();
 
   @PrePersist
-  public void setPreInsertData() {
-    this.createdAt = new Date();
-    this.activeStatus = ActiveStatus.ACTIVE.getValue();
+  public void prePersist() {
+    this.createdDate = new Date();
+    this.lastModifiedDate = new Date();
+    this.status = Status.DRAFT;
+    if (SecurityContextHolder.getContext().getAuthentication() != null) {
+      if (!(SecurityContextHolder.getContext().getAuthentication().getPrincipal()
+          instanceof String)) {
+        AuthUser user =
+            (AuthUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        this.modified_by = user.getId();
+      }
+    }
   }
 
   @PreUpdate
-  public void setPreUpdateData() {
-    this.updateAt = new Date();
-    if (this.activeStatus == null) {
-      this.activeStatus = ActiveStatus.ACTIVE.getValue();
-    }
-    if (this.activeStatus != ActiveStatus.DELETE.getValue()) {
-      this.activeStatus = ActiveStatus.ACTIVE.getValue();
+  public void preUpdate() {
+    this.lastModifiedDate = new Date();
+    if (SecurityContextHolder.getContext().getAuthentication() != null) {
+      if (!(SecurityContextHolder.getContext().getAuthentication().getPrincipal()
+          instanceof String)) {
+        AuthUser user =
+            (AuthUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        this.modified_by = user.getId();
+      }
     }
   }
 }

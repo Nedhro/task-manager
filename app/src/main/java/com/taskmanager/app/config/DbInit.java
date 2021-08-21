@@ -1,8 +1,6 @@
+/*
 package com.taskmanager.app.config;
 
-import com.taskmanager.app.core.enums.ActiveStatus;
-import com.taskmanager.app.core.model.Role;
-import com.taskmanager.app.core.model.User;
 import com.taskmanager.app.repository.RoleRepository;
 import com.taskmanager.app.repository.UserRepository;
 import java.util.Arrays;
@@ -71,3 +69,4 @@ public class DbInit {
     userRepository.save(userNormal);
   }
 }
+*/

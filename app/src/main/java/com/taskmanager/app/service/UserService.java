@@ -1,20 +1,28 @@
 package com.taskmanager.app.service;
 
-import com.taskmanager.app.core.dto.Response;
 import com.taskmanager.app.core.dto.UserDto;
 import com.taskmanager.app.core.model.User;
+import com.taskmanager.app.core.model.UserVerification;
 import java.util.List;
+import org.springframework.data.domain.Page;
 
 public interface UserService {
-  Response save(UserDto userDto);
+
+  List<User> findAll();
+
+  Page<User> findAll(int page, int size);
+
+  User findById(long Id);
+
+  User findByUserName(String username);
+
+  User registration(UserDto user, String password) throws Exception;
+
+  User save(User user);
 
   User update(User user);
 
-  User getById(Long id);
+  void generateVerificationToken(User user, String token);
 
-  User getByName(String name);
-
-  String delete(Long id);
-
-  List<User> list();
+  UserVerification getUserByverificationToken(String token) throws Exception;
 }
