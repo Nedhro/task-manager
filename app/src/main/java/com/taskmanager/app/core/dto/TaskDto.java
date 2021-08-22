@@ -1,8 +1,9 @@
 package com.taskmanager.app.core.dto;
 
+import com.taskmanager.app.core.enums.TaskStatus;
 import java.util.Date;
-import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,14 +14,12 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString(callSuper = true)
+@EqualsAndHashCode()
 public class TaskDto {
 
   private Long id;
-  @NotNull
   private String description;
-  @NotNull
-  private String taskStatus;
-  @NotNull
+  private TaskStatus taskStatus;
   private ProjectDto project;
   private Date dueDate;
 }

@@ -41,8 +41,8 @@ public final class ResponseBuilder {
     return Response.builder()
         .message(message)
         .status(status.getReasonPhrase())
-        .status(HttpStatus.BAD_REQUEST.getReasonPhrase())
-        .statusCode(HttpStatus.BAD_REQUEST.value())
+        .statusCode(status.value())
+        .content(null)
         .timeStamp(new Date().getTime())
         .build();
   }
@@ -54,31 +54,6 @@ public final class ResponseBuilder {
         .statusCode(status.value())
         .content(content)
         .timeStamp(new Date().getTime())
-        .build();
-  }
-
-  public static Response getSuccessResponse(
-      HttpStatus status, String message, Object content, int numberOfElement) {
-    return Response.builder()
-        .message(message)
-        .status(status.getReasonPhrase())
-        .statusCode(status.value())
-        .content(content)
-        .timeStamp(new Date().getTime())
-        .numberOfElement(numberOfElement)
-        .build();
-  }
-
-  public static Response getSuccessResponse(
-      HttpStatus status, String message, Object content, int numberOfElement, Long rowCount) {
-    return Response.builder()
-        .message(message)
-        .status(status.getReasonPhrase())
-        .statusCode(status.value())
-        .content(content)
-        .timeStamp(new Date().getTime())
-        .numberOfElement(numberOfElement)
-        .rowCount(rowCount)
         .build();
   }
 }

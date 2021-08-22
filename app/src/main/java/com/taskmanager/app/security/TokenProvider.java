@@ -11,12 +11,14 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 @Component
+@Log4j2
 public class TokenProvider implements Serializable {
 
   static final String CLAIM_KEY_USERNAME = "sub";
@@ -141,8 +143,8 @@ public class TokenProvider implements Serializable {
     final Date createdDate = (Date) claims.get(CLAIM_KEY_CREATED);
     final Date expirationDate = new Date(createdDate.getTime() + expiration * 1000);
 
-    System.out.println("doGenerateToken " + createdDate);
-    System.out.println("doGenerateToken " + expirationDate);
+    log.info("doGenerateToken " + createdDate);
+    log.info("doGenerateToken " + expirationDate);
 
     return Jwts.builder()
         .setClaims(claims)
