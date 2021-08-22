@@ -49,7 +49,9 @@ public class ProjectServiceImpl extends CommonServiceImpl<Project> implements Pr
   public Response getProjectById(Long projectId) {
     Optional<Project> project = projectRepository.findById(projectId);
     return ResponseBuilder.getSuccessResponse(
-        HttpStatus.OK, root + " has been retrieved successfully.", project.get());
+        HttpStatus.OK,
+        root + " has been retrieved successfully.",
+        project.isPresent() ? project.get() : "No Element");
   }
 
   @Override
@@ -73,15 +75,12 @@ public class ProjectServiceImpl extends CommonServiceImpl<Project> implements Pr
   @Override
   public Response updateProject(Long projectId, ProjectDto projectDto) {
     Project project = projectRepository.getById(projectId);
-    if (project != null && projectDto.getId() != null) {
+    if (projectDto.getId() != null) {
       project.setId(projectDto.getId());
       project.setName(projectDto.getName());
       project = projectRepository.save(project);
-      if (project != null)
-        return ResponseBuilder.getSuccessResponse(
-            HttpStatus.ACCEPTED, "The " + root + " has been updated Successfully", project);
-      return ResponseBuilder.getFailureResponse(
-          HttpStatus.BAD_REQUEST, root + " couldn't be updated");
+      return ResponseBuilder.getSuccessResponse(
+          HttpStatus.ACCEPTED, "The " + root + " has been updated Successfully", project);
     }
     return ResponseBuilder.getFailureResponse(
         HttpStatus.NOT_FOUND, root + " doesn't exist with this id (" + projectId + ")");

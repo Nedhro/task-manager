@@ -1,8 +1,12 @@
 package com.taskmanager.app.core.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.taskmanager.app.core.enums.TaskStatus;
 import java.util.Date;
+import javax.persistence.Basic;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -40,7 +44,11 @@ public class Task extends BaseEntity<Long> {
 
   @NotNull
   private String description;
+
+  @Basic(optional = false)
   @NotNull
+  @Enumerated(EnumType.STRING)
+  @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
   private TaskStatus taskStatus;
 
   @ManyToOne(fetch = FetchType.LAZY)
