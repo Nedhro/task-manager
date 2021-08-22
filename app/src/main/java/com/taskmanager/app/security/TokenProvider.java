@@ -1,6 +1,6 @@
 package com.taskmanager.app.security;
 
-import com.taskmanager.app.core.model.AuthUser;
+import com.taskmanager.app.core.entity.AuthUser;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

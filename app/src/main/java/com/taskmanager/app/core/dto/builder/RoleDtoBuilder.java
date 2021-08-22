@@ -1,8 +1,8 @@
-package com.taskmanager.app.filter;
+package com.taskmanager.app.core.dto.builder;
 
 import com.taskmanager.app.core.dto.RoleDto;
-import com.taskmanager.app.core.model.Permission;
-import com.taskmanager.app.core.model.Role;
+import com.taskmanager.app.core.entity.Permission;
+import com.taskmanager.app.core.entity.Role;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;

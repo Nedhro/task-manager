@@ -1,6 +1,6 @@
 package com.taskmanager.app.repository;
 
-import com.taskmanager.app.core.model.Role;
+import com.taskmanager.app.core.entity.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

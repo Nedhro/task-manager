@@ -1,9 +1,9 @@
 package com.taskmanager.app.config;
 
-import com.taskmanager.app.core.model.AuthUser;
-import com.taskmanager.app.core.model.Permission;
-import com.taskmanager.app.core.model.Role;
-import com.taskmanager.app.core.model.User;
+import com.taskmanager.app.core.entity.AuthUser;
+import com.taskmanager.app.core.entity.Permission;
+import com.taskmanager.app.core.entity.Role;
+import com.taskmanager.app.core.entity.User;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;

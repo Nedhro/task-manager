@@ -1,18 +1,18 @@
-package com.taskmanager.app.core.model;
+package com.taskmanager.app.core.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.util.Date;
-import java.util.Set;
+import java.util.Collection;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,35 +32,30 @@ import org.hibernate.annotations.FetchMode;
 @Builder
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@Table(name = "USERS")
-public class User extends BaseEntity<Long> {
+@Table(name = "role")
+public class Role extends BaseEntity<Long> {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
 
-  @Column(name = "USERNAME", length = 50, unique = true)
-  @NotNull
-  private String username;
-
-  @Column(name = "PASSWORD", length = 100)
-  @NotNull
-  @JsonIgnore
-  private String password;
-
   @Column(name = "NAME", length = 50)
   @NotNull
   private String name;
 
-  @Column(name = "ENABLED")
-  private Boolean enabled;
+  @Column(name = "TITLE", length = 250)
+  private String title;
 
-  @Column(name = "LASTPASSWORDRESETDATE")
-  @Temporal(TemporalType.TIMESTAMP)
-  private Date lastPasswordResetDate;
-
-  @ManyToMany(fetch = FetchType.EAGER)
   @JsonIgnore
+  @ManyToMany(mappedBy = "roles", fetch = FetchType.EAGER)
   @Fetch(value = FetchMode.SUBSELECT)
-  private Set<Role> roles;
+  private List<User> users;
+
+  @JsonIgnore
+  @ManyToMany(fetch = FetchType.EAGER)
+  @JoinTable(
+      name = "roles_permissions",
+      joinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"),
+      inverseJoinColumns = @JoinColumn(name = "permission_id", referencedColumnName = "id"))
+  private Collection<Permission> permissions;
 }

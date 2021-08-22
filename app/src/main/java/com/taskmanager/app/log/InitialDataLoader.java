@@ -1,8 +1,8 @@
 package com.taskmanager.app.log;
 
-import com.taskmanager.app.core.model.Permission;
-import com.taskmanager.app.core.model.Role;
-import com.taskmanager.app.core.model.User;
+import com.taskmanager.app.core.entity.Permission;
+import com.taskmanager.app.core.entity.Role;
+import com.taskmanager.app.core.entity.User;
 import com.taskmanager.app.repository.PermissionRepository;
 import com.taskmanager.app.repository.RoleRepository;
 import com.taskmanager.app.repository.UserRepository;

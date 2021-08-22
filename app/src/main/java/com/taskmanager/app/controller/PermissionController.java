@@ -1,6 +1,6 @@
 package com.taskmanager.app.controller;
 
-import com.taskmanager.app.core.model.AuthUser;
+import com.taskmanager.app.core.entity.AuthUser;
 import com.taskmanager.app.repository.PermissionRepository;
 import com.taskmanager.app.util.CustomUtil;
 import com.taskmanager.app.util.MenuGroup;

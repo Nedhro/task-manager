@@ -2,9 +2,19 @@ package com.taskmanager.app.core.dto;
 
 import java.util.HashSet;
 import java.util.Set;
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString(callSuper = true)
+@EqualsAndHashCode()
 public class UserDto {
 
   private Long id;

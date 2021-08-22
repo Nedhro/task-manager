@@ -1,8 +1,8 @@
 package com.taskmanager.app.service;
 
 import com.taskmanager.app.core.dto.UserDto;
-import com.taskmanager.app.core.model.User;
-import com.taskmanager.app.core.model.UserVerification;
+import com.taskmanager.app.core.entity.User;
+import com.taskmanager.app.core.entity.UserVerification;
 import java.util.List;
 import org.springframework.data.domain.Page;
 

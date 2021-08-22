@@ -1,10 +1,10 @@
 package com.taskmanager.app.controller;
 
 import com.taskmanager.app.core.dto.RoleDto;
-import com.taskmanager.app.core.model.AuthUser;
-import com.taskmanager.app.core.model.Permission;
-import com.taskmanager.app.core.model.Role;
-import com.taskmanager.app.filter.RoleDtoBuilder;
+import com.taskmanager.app.core.dto.builder.RoleDtoBuilder;
+import com.taskmanager.app.core.entity.AuthUser;
+import com.taskmanager.app.core.entity.Permission;
+import com.taskmanager.app.core.entity.Role;
 import com.taskmanager.app.repository.PermissionRepository;
 import com.taskmanager.app.repository.RoleRepository;
 import com.taskmanager.app.util.CustomUtil;

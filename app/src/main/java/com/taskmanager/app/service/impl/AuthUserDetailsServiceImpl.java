@@ -2,8 +2,8 @@ package com.taskmanager.app.service.impl;
 
 import com.taskmanager.app.config.AuthUserFactory;
 import com.taskmanager.app.core.dto.AuthUserDto;
-import com.taskmanager.app.core.model.AuthUser;
-import com.taskmanager.app.core.model.User;
+import com.taskmanager.app.core.entity.AuthUser;
+import com.taskmanager.app.core.entity.User;
 import com.taskmanager.app.repository.UserRepository;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,12 +1,10 @@
-package com.taskmanager.app.core.model;
+package com.taskmanager.app.core.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.util.Collection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,8 +21,9 @@ import lombok.ToString;
 @NoArgsConstructor
 @Builder
 @ToString(callSuper = true)
-@EqualsAndHashCode()
-public class Permission {
+@EqualsAndHashCode(callSuper = true)
+@Table(name = "project")
+public class Project extends BaseEntity<Long> {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
@@ -32,10 +31,4 @@ public class Permission {
 
   @NotNull
   private String name;
-
-  private String group;
-
-  @ManyToMany(mappedBy = "permissions")
-  @JsonIgnore
-  private Collection<Role> roles;
 }

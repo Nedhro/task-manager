@@ -1,7 +1,7 @@
 package com.taskmanager.app.repository;
 
-import com.taskmanager.app.core.model.User;
-import com.taskmanager.app.core.model.UserVerification;
+import com.taskmanager.app.core.entity.User;
+import com.taskmanager.app.core.entity.UserVerification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

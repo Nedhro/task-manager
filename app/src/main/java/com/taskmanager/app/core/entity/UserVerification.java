@@ -1,4 +1,4 @@
-package com.taskmanager.app.core.model;
+package com.taskmanager.app.core.entity;
 
 import java.io.Serializable;
 import javax.persistence.Column;

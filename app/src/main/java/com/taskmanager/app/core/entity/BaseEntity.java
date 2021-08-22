@@ -1,4 +1,4 @@
-package com.taskmanager.app.core.model;
+package com.taskmanager.app.core.entity;
 
 import com.taskmanager.app.core.enums.Status;
 import java.io.Serializable;

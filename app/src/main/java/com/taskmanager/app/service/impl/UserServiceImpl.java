@@ -1,8 +1,8 @@
 package com.taskmanager.app.service.impl;
 
 import com.taskmanager.app.core.dto.UserDto;
-import com.taskmanager.app.core.model.User;
-import com.taskmanager.app.core.model.UserVerification;
+import com.taskmanager.app.core.entity.User;
+import com.taskmanager.app.core.entity.UserVerification;
 import com.taskmanager.app.repository.UserRepository;
 import com.taskmanager.app.repository.UserVerificationRepository;
 import com.taskmanager.app.service.UserService;

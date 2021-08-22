@@ -1,4 +1,4 @@
-package com.taskmanager.app.core.model;
+package com.taskmanager.app.core.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Collection;
