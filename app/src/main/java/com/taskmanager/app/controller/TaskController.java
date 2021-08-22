@@ -19,13 +19,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class TaskController {
 
   private static Set<String> features = new HashSet<>();
-
+  /*These privileges can be used specifically*/
   static {
     features.add("TASK_READ");
     features.add("TASK_TRACK");
     features.add("TASK_WRITE");
-    features.add("TASK_ASSIGN");
-    features.add("TASK_PUBLISH");
+    features.add("TASK_DELETE");
     CustomUtil.permissions.put(RoleGroup.TASK.name(), features);
   }
 

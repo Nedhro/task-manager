@@ -37,6 +37,5 @@ public class Project extends BaseEntity<Long> {
 
   @OneToMany(mappedBy = "project")
   @JsonIgnore
-  @ToString.Exclude
   private List<Task> tasks;
 }

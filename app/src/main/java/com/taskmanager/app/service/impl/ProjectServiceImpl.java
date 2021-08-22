@@ -6,13 +6,18 @@ import com.taskmanager.app.core.entity.Project;
 import com.taskmanager.app.repository.ProjectRepository;
 import com.taskmanager.app.service.ProjectService;
 import com.taskmanager.app.util.ResponseBuilder;
+import java.util.List;
+import java.util.Optional;
 import javax.transaction.Transactional;
+import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 @Service
+@Log4j2
 public class ProjectServiceImpl extends CommonServiceImpl<Project> implements ProjectService {
 
   private final String root = "project";
@@ -38,5 +43,65 @@ public class ProjectServiceImpl extends CommonServiceImpl<Project> implements Pr
         HttpStatus.CREATED,
         " The " + root + " (" + project.getName() + ") has been created successfully",
         project);
+  }
+
+  @Override
+  public Response getProjectById(Long projectId) {
+    Optional<Project> project = projectRepository.findById(projectId);
+    return ResponseBuilder.getSuccessResponse(
+        HttpStatus.OK, root + " has been retrieved successfully.", project.get());
+  }
+
+  @Override
+  public Response getAllProjects() {
+    List<Project> projectList = projectRepository.findAll();
+    return ResponseBuilder.getSuccessResponse(
+        HttpStatus.OK,
+        root + " list have been retrieved successfully. Total : " + projectList.size(),
+        projectList);
+  }
+
+  @Override
+  public Response getAllProjectsByUser(Long id) {
+    List<Project> projectList = projectRepository.findAllByModifiedBy(id);
+    return ResponseBuilder.getSuccessResponse(
+        HttpStatus.OK,
+        root + " list have been retrieved successfully. Total : " + projectList.size(),
+        projectList);
+  }
+
+  @Override
+  public Response updateProject(Long projectId, ProjectDto projectDto) {
+    Project project = projectRepository.getById(projectId);
+    if (project != null && projectDto.getId() != null) {
+      project.setId(projectDto.getId());
+      project.setName(projectDto.getName());
+      project = projectRepository.save(project);
+      if (project != null)
+        return ResponseBuilder.getSuccessResponse(
+            HttpStatus.ACCEPTED, "The " + root + " has been updated Successfully", project);
+      return ResponseBuilder.getFailureResponse(
+          HttpStatus.BAD_REQUEST, root + " couldn't be updated");
+    }
+    return ResponseBuilder.getFailureResponse(
+        HttpStatus.NOT_FOUND, root + " doesn't exist with this id (" + projectId + ")");
+  }
+
+  @Override
+  public Response deleteProject(Long projectId) {
+    Optional<Project> project = projectRepository.findById(projectId);
+    if (project.isPresent()) {
+      try {
+        projectRepository.deleteById(projectId);
+        return ResponseBuilder.getSuccessResponse(
+            HttpStatus.ACCEPTED, root + " has been deleted successfully ", project.get());
+      } catch (DataIntegrityViolationException e) {
+        log.error(e.getMessage());
+        return ResponseBuilder.getSuccessResponse(
+            HttpStatus.NOT_ACCEPTABLE, root + " couldn't be deleted successfully ", project.get());
+      }
+    }
+    return ResponseBuilder.getFailureResponse(
+        HttpStatus.NOT_FOUND, root + " doesn't exist with this id (" + projectId + ")");
   }
 }

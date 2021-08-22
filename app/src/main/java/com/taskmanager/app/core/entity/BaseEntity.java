@@ -35,9 +35,9 @@ public abstract class BaseEntity<ID> implements Serializable {
   private Date lastModifiedDate;
 
   @Column(name = "modified_by")
-  private Long modified_by;
+  private Long modifiedBy;
 
-  private Status status = Status.DRAFT;
+  private Status status = Status.ACTIVE;
 
   public abstract ID getId();
 
@@ -45,13 +45,13 @@ public abstract class BaseEntity<ID> implements Serializable {
   public void prePersist() {
     this.createdDate = new Date();
     this.lastModifiedDate = new Date();
-    this.status = Status.DRAFT;
+    this.status = Status.ACTIVE;
     if (SecurityContextHolder.getContext().getAuthentication() != null) {
       if (!(SecurityContextHolder.getContext().getAuthentication().getPrincipal()
           instanceof String)) {
         AuthUser user =
             (AuthUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        this.modified_by = user.getId();
+        this.modifiedBy = user.getId();
       }
     }
   }
@@ -64,7 +64,7 @@ public abstract class BaseEntity<ID> implements Serializable {
           instanceof String)) {
         AuthUser user =
             (AuthUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        this.modified_by = user.getId();
+        this.modifiedBy = user.getId();
       }
     }
   }
