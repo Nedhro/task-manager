@@ -12,9 +12,13 @@ public interface ProjectService extends CommonService<Project> {
 
   Response getAllProjects();
 
+  Response getAllOwnProjects(Long userId);
+
   Response getAllProjectsByUser(Long id);
 
   Response updateProject(Long projectId, ProjectDto projectDto);
 
   Response deleteProject(Long projectId);
+
+
 }

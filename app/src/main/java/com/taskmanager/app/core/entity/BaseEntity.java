@@ -28,6 +28,9 @@ public abstract class BaseEntity<ID> implements Serializable {
   @DateTimeFormat(pattern = "yyyy-MM-dd")
   private Date createdDate;
 
+  @Column(name = "created_by")
+  private Long createdBy;
+
   @CreationTimestamp
   @Column(name = "last_modified_date", nullable = false)
   @Temporal(TemporalType.TIMESTAMP)
@@ -44,14 +47,13 @@ public abstract class BaseEntity<ID> implements Serializable {
   @PrePersist
   public void prePersist() {
     this.createdDate = new Date();
-    this.lastModifiedDate = new Date();
     this.status = Status.ACTIVE;
     if (SecurityContextHolder.getContext().getAuthentication() != null) {
       if (!(SecurityContextHolder.getContext().getAuthentication().getPrincipal()
           instanceof String)) {
         AuthUser user =
             (AuthUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        this.modifiedBy = user.getId();
+        this.createdBy = user.getId();
       }
     }
   }

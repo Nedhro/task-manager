@@ -11,6 +11,8 @@ public interface TaskService extends CommonService<Task> {
 
   Response getAllTasks();
 
+  Response getAllOwnTasks(Long userId);
+
   Response getAllTasksByUser(Long id);
 
   Response updateTask(Long taskId, TaskDto taskDto);
@@ -24,4 +26,5 @@ public interface TaskService extends CommonService<Task> {
   Response getTaskByProjectId(Long projectId);
 
   Response getExpiredTaskList();
+
 }

@@ -64,8 +64,17 @@ public class TaskServiceImpl extends CommonServiceImpl<Task> implements TaskServ
   }
 
   @Override
+  public Response getAllOwnTasks(Long userId) {
+    Collection<Task> taskList = taskRepository.findAllByCreatedByOrderByCreatedDateDesc(userId);
+    return ResponseBuilder.getSuccessResponse(
+        HttpStatus.OK,
+        root + " list have been retrieved successfully. Total : " + taskList.size(),
+        taskList);
+  }
+
+  @Override
   public Response getAllTasksByUser(Long id) {
-    List<Task> taskList = taskRepository.findAllByModifiedBy(id);
+    Collection<Task> taskList = taskRepository.findAllByCreatedByOrderByCreatedDateDesc(id);
     return ResponseBuilder.getSuccessResponse(
         HttpStatus.OK,
         root + " list have been retrieved successfully. Total : " + taskList.size(),

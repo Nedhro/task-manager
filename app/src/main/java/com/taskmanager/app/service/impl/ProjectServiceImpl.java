@@ -6,6 +6,7 @@ import com.taskmanager.app.core.entity.Project;
 import com.taskmanager.app.repository.ProjectRepository;
 import com.taskmanager.app.service.ProjectService;
 import com.taskmanager.app.util.ResponseBuilder;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import javax.transaction.Transactional;
@@ -64,8 +65,19 @@ public class ProjectServiceImpl extends CommonServiceImpl<Project> implements Pr
   }
 
   @Override
+  public Response getAllOwnProjects(Long userId) {
+    Collection<Project> projectList = projectRepository
+        .findAllByCreatedByOrderByCreatedDateDesc(userId);
+    return ResponseBuilder.getSuccessResponse(
+        HttpStatus.OK,
+        root + " list have been retrieved successfully. Total : " + projectList.size(),
+        projectList);
+  }
+
+  @Override
   public Response getAllProjectsByUser(Long id) {
-    List<Project> projectList = projectRepository.findAllByModifiedBy(id);
+    Collection<Project> projectList = projectRepository
+        .findAllByCreatedByOrderByCreatedDateDesc(id);
     return ResponseBuilder.getSuccessResponse(
         HttpStatus.OK,
         root + " list have been retrieved successfully. Total : " + projectList.size(),

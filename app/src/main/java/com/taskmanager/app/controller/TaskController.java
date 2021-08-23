@@ -44,7 +44,7 @@ public class TaskController {
     this.taskService = taskService;
   }
 
-  @PostMapping("/task/save")
+  @PostMapping("/tasks/save")
   @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
   public Response createTask(@RequestBody TaskDto taskDto, Authentication auth) {
     AuthUser authenticatedUser = (AuthUser) auth.getPrincipal();
@@ -54,13 +54,19 @@ public class TaskController {
     return taskService.saveTask(taskDto);
   }
 
-  @GetMapping("/task/list")
-  @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
+  @GetMapping("/tasks/list")
+  @PreAuthorize("hasRole('ROLE_ADMIN')")
   public Response getTaskList() {
     return taskService.getAllTasks();
   }
 
-  @GetMapping("/task/listByUser/{username}")
+  @GetMapping("/tasks/own/{userId}")
+  @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
+  public Response getOwnTaskList(@PathVariable("userId") Long userId) {
+    return taskService.getAllOwnTasks(userId);
+  }
+
+  @GetMapping("/tasks/listByUser/{username}")
   @PreAuthorize("hasRole('ROLE_ADMIN')")
   public Response getTaskListByUser(@PathVariable String username) {
     User user = userService.findByUserName(username);
@@ -70,31 +76,31 @@ public class TaskController {
         HttpStatus.NOT_FOUND, " No user exists by this username");
   }
 
-  @PutMapping("/task/update/{taskId}")
+  @PutMapping("/tasks/update/{taskId}")
   @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
   public Response updateTask(@RequestBody TaskDto taskDto, @PathVariable("taskId") Long taskId) {
     return taskService.updateTask(taskId, taskDto);
   }
 
-  @GetMapping("/task/{taskId}")
+  @GetMapping("/tasks/{taskId}")
   @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
   public Response getTask(@PathVariable("taskId") Long taskId) {
     return taskService.getTaskById(taskId);
   }
 
-  @GetMapping("/task/searchByProject/{projectId}")
+  @GetMapping("/tasks/searchByProject/{projectId}")
   @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
   public Response getTaskByProject(@PathVariable("projectId") Long projectId) {
     return taskService.getTaskByProjectId(projectId);
   }
 
-  @GetMapping("/task/expired/search")
+  @GetMapping("/tasks/expired/search")
   @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
   public Response getExpiredTask() {
     return taskService.getExpiredTaskList();
   }
 
-  @GetMapping("/task/searchByStatus/{taskStatus}")
+  @GetMapping("/tasks/searchByStatus/{taskStatus}")
   @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
   public Response getTask(@PathVariable("taskStatus") String taskStatus) {
     switch (taskStatus.toLowerCase()) {
@@ -109,7 +115,7 @@ public class TaskController {
     }
   }
 
-  @DeleteMapping("/task/{taskId}")
+  @DeleteMapping("/tasks/{taskId}")
   @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
   public Response deleteTask(@PathVariable("taskId") Long taskId) {
     return taskService.deleteTask(taskId);
