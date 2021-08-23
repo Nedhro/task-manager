@@ -7,11 +7,7 @@ import com.taskmanager.app.core.entity.User;
 import com.taskmanager.app.core.enums.TaskStatus;
 import com.taskmanager.app.service.TaskService;
 import com.taskmanager.app.service.UserService;
-import com.taskmanager.app.util.CustomUtil;
 import com.taskmanager.app.util.ResponseBuilder;
-import com.taskmanager.app.util.RoleGroup;
-import java.util.HashSet;
-import java.util.Set;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -25,16 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class TaskController {
-
-  private static Set<String> features = new HashSet<>();
-  /*These privileges can be used specifically*/
-  static {
-    features.add("TASK_READ");
-    features.add("TASK_TRACK");
-    features.add("TASK_WRITE");
-    features.add("TASK_DELETE");
-    CustomUtil.permissions.put(RoleGroup.TASK.name(), features);
-  }
 
   private final UserService userService;
   private final TaskService taskService;

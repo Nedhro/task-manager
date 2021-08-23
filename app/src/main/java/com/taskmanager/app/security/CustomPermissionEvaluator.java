@@ -4,7 +4,7 @@ import java.io.Serializable;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-
+/*Custom Evakuator created for creating custom permission method */
 public class CustomPermissionEvaluator implements PermissionEvaluator {
 
   @Override
